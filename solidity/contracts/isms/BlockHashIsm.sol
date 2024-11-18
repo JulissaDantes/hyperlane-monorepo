@@ -11,6 +11,9 @@ interface IBlockHashOracle {
     function blockHash(uint256 height) external view returns (uint256 hash);
 }
 
+/**
+ * @notice Initializes the BlockHashISM contract with the provided oracle address.
+ */
 contract BlockHashISM is IInterchainSecurityModule, PackageVersioned {
     using Message for bytes;
 
@@ -46,6 +49,14 @@ contract BlockHashISM is IInterchainSecurityModule, PackageVersioned {
         return true;
     }
 
+    /**
+     * @notice Extracts the block hash and block height from the beginning of the message body.
+     * @dev This function assumes that the first 64 bytes of `_messageBody` contain two `uint256` values:
+     * `blockHash` and `blockHeight`. The function will revert if `_messageBody` is shorter than 64 bytes.
+     * @param _messageBody The calldata containing the block information at its start.
+     * @return hash The extracted block hash.
+     * @return height The extracted block height.
+     */
     function _extractBlockInfo(
         bytes calldata _messageBody
     ) internal view returns (uint256 hash, uint256 height) {
